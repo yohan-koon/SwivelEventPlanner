@@ -16,7 +16,7 @@ interface SignUpFormValues {
   confirmPassword: string
 }
 
-export const SignUpScreen = () => {
+export const SignUpScreen: FC = () => {
   const navigation = useNavigation<NavigationProp<OnboardingNavigatorParamList>>()
   const { t } = useTranslation()
 

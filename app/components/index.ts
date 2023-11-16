@@ -6,3 +6,4 @@ export * from './Spacer';
 export * from './Button';
 export * from './NetworkImage';
 export * from './LinkButton';
+export * from './RoundedButton';

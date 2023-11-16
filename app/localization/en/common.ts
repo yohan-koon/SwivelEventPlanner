@@ -1,5 +1,6 @@
 export default{
     back: 'Back',
+    next: 'Next',
     loading: 'Loading...',
     validations: {
         required: "{{fieldName}} is Required",

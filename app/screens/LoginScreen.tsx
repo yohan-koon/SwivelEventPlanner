@@ -1,80 +1,128 @@
-import { TextInput, TouchableOpacity, View, ViewStyle } from 'react-native'
-import React, { FC, useMemo, useRef, useState } from 'react'
-import { Button, ButtonAccessoryProps, Icon, LinkButton, LinkButtonAccessoryProps, Screen, Spacer, TextField, TextFieldAccessoryProps, Text } from '../components'
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { OnboardingNavigatorParamList } from '../navigators';
-import { colors, spacing } from '../theme';
-import { Formik } from 'formik';
-import { ms } from '../utils';
-import { getLoginFormValidationSchema } from '../validations';
-import { useTranslation } from 'react-i18next';
+import {TextInput, TouchableOpacity, View, ViewStyle} from 'react-native';
+import React, {FC, useMemo, useRef, useState} from 'react';
+import {
+  Button,
+  ButtonAccessoryProps,
+  Icon,
+  LinkButton,
+  LinkButtonAccessoryProps,
+  Screen,
+  Spacer,
+  TextField,
+  TextFieldAccessoryProps,
+  Text,
+} from '../components';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {OnboardingNavigatorParamList} from '../navigators';
+import {colors, spacing} from '../theme';
+import {Formik} from 'formik';
+import {ms} from '../utils';
+import {getLoginFormValidationSchema} from '../validations';
+import {useTranslation} from 'react-i18next';
 
 interface LoginFormValues {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 export const LoginScreen: FC = () => {
-  const navigation = useNavigation<NavigationProp<OnboardingNavigatorParamList>>();
-  const {t} = useTranslation()
+  const navigation =
+    useNavigation<NavigationProp<OnboardingNavigatorParamList>>();
+  const {t} = useTranslation();
 
-  const passwordRef = useRef<TextInput>(null)
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false)
+  const passwordRef = useRef<TextInput>(null);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const initialFormValues: LoginFormValues = {
-    email: "",
-    password: "",
-  }
+    email: '',
+    password: '',
+  };
 
   //Email Icon for Email TextField
   const EmailLeftAccessory: FC<TextFieldAccessoryProps> = useMemo(
-    () => function EmailLeftAccessory(props: TextFieldAccessoryProps) {
-      return <Icon icon="mail" size={ms(18)} {...props} />
-    },
+    () =>
+      function EmailLeftAccessory(props: TextFieldAccessoryProps) {
+        return <Icon icon="mail" size={ms(18)} {...props} />;
+      },
     [],
-  )
+  );
   //Password Icon for Password TextField
   const PasswordLeftAccessory: FC<TextFieldAccessoryProps> = useMemo(
-    () => function PasswordRightAccessory(props: TextFieldAccessoryProps) {
-      return <Icon icon="lock" size={ms(15)} {...props} />
-    },
+    () =>
+      function PasswordRightAccessory(props: TextFieldAccessoryProps) {
+        return <Icon icon="lock" size={ms(15)} {...props} />;
+      },
     [],
-  )
+  );
   //ClosedEye / Eye Icon for Password TextField
   const PasswordRightAccessory: FC<TextFieldAccessoryProps> = useMemo(
-    () => function PasswordRightAccessory(props: TextFieldAccessoryProps) {
-      return (<TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
-        <Icon icon={isPasswordVisible ? "openEye" : "closedEye"} size={ms(15)} {...props} />
-      </TouchableOpacity>)
-    },
+    () =>
+      function PasswordRightAccessory(props: TextFieldAccessoryProps) {
+        return (
+          <TouchableOpacity
+            onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
+            <Icon
+              icon={isPasswordVisible ? 'openEye' : 'closedEye'}
+              size={ms(15)}
+              {...props}
+            />
+          </TouchableOpacity>
+        );
+      },
     [isPasswordVisible],
-  )
+  );
   //Open Icon for Restore Password LinkButton
   const RestorePasswordRightAccessory: FC<LinkButtonAccessoryProps> = useMemo(
-    () => function RestorePasswordRightAccessory(props: LinkButtonAccessoryProps) {
-      return <Icon icon="openArrow" size={ms(10)} {...props} color={colors.palette.primary900}/>
-    },
+    () =>
+      function RestorePasswordRightAccessory(props: LinkButtonAccessoryProps) {
+        return (
+          <Icon
+            icon="openArrow"
+            size={ms(10)}
+            {...props}
+            color={colors.palette.primary900}
+          />
+        );
+      },
     [],
-  )
+  );
   //Next Icon for Login and SignUp Buttons
   const ButtonRightAccessory: FC<ButtonAccessoryProps> = useMemo(
-    () => function ButtonRightAccessory(props: ButtonAccessoryProps) {
-      return <Icon icon="nextArrow" size={ms(13.5)} {...props} color={colors.palette.neutral100} />
-    },
+    () =>
+      function ButtonRightAccessory(props: ButtonAccessoryProps) {
+        return (
+          <Icon
+            icon="nextArrow"
+            size={ms(13.5)}
+            {...props}
+            color={colors.palette.neutral100}
+          />
+        );
+      },
     [],
-  )
+  );
 
   return (
     <Screen
       style={$root}
       contentContainerStyle={$contentContainer}
       preset="scroll"
-      safeAreaEdges={["top", "bottom"]}
-    >
-      <Formik initialValues={initialFormValues} validationSchema={getLoginFormValidationSchema(t)} onSubmit={(values) => {
-        console.log({ values })
-      }}>
-        {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+      safeAreaEdges={['top', 'bottom']}>
+      <Formik
+        initialValues={initialFormValues}
+        //validationSchema={getLoginFormValidationSchema(t)}
+        onSubmit={values => {
+          console.log({values});
+          navigation.navigate('ProfileImageUpload')
+        }}>
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          errors,
+          touched,
+        }) => (
           <>
             <View style={$topContainer}>
               <View style={$titleContainer}>
@@ -89,11 +137,15 @@ export const LoginScreen: FC = () => {
                   LeftAccessory={EmailLeftAccessory}
                   keyboardType="email-address"
                   returnKeyType="next"
-                  onSubmitEditing={() => { passwordRef?.current?.focus() }}
-                  onChangeText={handleChange("email")}
-                  onBlur={handleBlur("email")}
+                  onSubmitEditing={() => {
+                    passwordRef?.current?.focus();
+                  }}
+                  onChangeText={handleChange('email')}
+                  onBlur={handleBlur('email')}
                   value={values.email}
-                  helper={touched.email && errors.email ? errors.email : undefined}
+                  helper={
+                    touched.email && errors.email ? errors.email : undefined
+                  }
                 />
                 <Spacer mainAxisSize={spacing.md} />
                 <TextField
@@ -104,11 +156,17 @@ export const LoginScreen: FC = () => {
                   LeftAccessory={PasswordLeftAccessory}
                   RightAccessory={PasswordRightAccessory}
                   returnKeyType="done"
-                  onSubmitEditing={() => { handleSubmit() }}
-                  onChangeText={handleChange("password")}
-                  onBlur={handleBlur("password")}
+                  onSubmitEditing={() => {
+                    handleSubmit();
+                  }}
+                  onChangeText={handleChange('password')}
+                  onBlur={handleBlur('password')}
                   value={values.password}
-                  helper={touched.password && errors.password ? errors.password : undefined}
+                  helper={
+                    touched.password && errors.password
+                      ? errors.password
+                      : undefined
+                  }
                 />
                 <Spacer mainAxisSize={spacing.lg} />
                 <LinkButton
@@ -125,41 +183,45 @@ export const LoginScreen: FC = () => {
                 onPress={() => handleSubmit()}
               />
               <Spacer mainAxisSize={spacing.md} />
-              <Button tx="loginScreen:signUpBtn" RightAccessory={ButtonRightAccessory} onPress={() => navigation?.navigate('SignUp')} />
+              <Button
+                tx="loginScreen:signUpBtn"
+                RightAccessory={ButtonRightAccessory}
+                onPress={() => navigation?.navigate('SignUp')}
+              />
             </View>
           </>
         )}
       </Formik>
     </Screen>
-  )
-}
+  );
+};
 
 const $root: ViewStyle = {
   flex: 1,
   paddingHorizontal: spacing.md,
-}
+};
 
 const $contentContainer: ViewStyle = {
   flex: 1,
-}
+};
 
 const $topContainer: ViewStyle = {
   flex: 3,
-  justifyContent: "center",
-}
+  justifyContent: 'center',
+};
 
 const $titleContainer: ViewStyle = {
-  alignItems: "center",
-}
+  alignItems: 'center',
+};
 
 const $formContainer: ViewStyle = {
   marginTop: spacing.xl,
-}
+};
 
 const $restorePasswordContainer: ViewStyle = {
-  alignSelf: "flex-end",
-}
+  alignSelf: 'flex-end',
+};
 
 const $bottomContainer: ViewStyle = {
   flex: 1,
-}
+};
