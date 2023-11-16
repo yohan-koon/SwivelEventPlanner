@@ -15,7 +15,6 @@ interface LoginFormValues {
 }
 
 export const LoginScreen: FC = () => {
-  // Pull in navigation via hook
   const navigation = useNavigation<NavigationProp<OnboardingNavigatorParamList>>();
   const {t} = useTranslation()
 
