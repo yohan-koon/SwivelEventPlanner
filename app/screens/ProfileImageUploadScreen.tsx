@@ -34,7 +34,7 @@ export const ProfileImageUploadScreen: FC = () => {
     }
 
     const navigateToPersonalInfoScreen = () => {
-      navigation.navigate("UserInfo")
+      navigation.navigate("PersonalInfo")
     }
 
     return (
