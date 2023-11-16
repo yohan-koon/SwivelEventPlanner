@@ -7,7 +7,7 @@ import { ViewStyle } from 'react-native';
 import { colors, spacing } from '../theme';
 import { Formik } from 'formik';
 import { ms } from '../utils';
-import { getSignUpFormValidationSchema } from '../validations/signUpFormValidationSchema';
+import { getSignUpFormValidationSchema } from '../validations';
 import { useTranslation } from 'react-i18next';
 
 interface SignUpFormValues {

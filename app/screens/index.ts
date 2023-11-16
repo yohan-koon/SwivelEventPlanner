@@ -1,6 +1,6 @@
 export * from './LoginScreen'
 export * from './SignUpScreen'
 export * from './ProfileImageUploadScreen'
-export * from './UserInfoScreen'
+export * from './PersonalInfoScreen'
 export * from './HomeScreen'
 export * from './ProfileScreen'
