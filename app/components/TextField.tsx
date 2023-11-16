@@ -191,7 +191,7 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
             style={$leftAccessoryStyle}
             status={status}
             editable={!disabled}
-            multiline={!!TextInputProps.multiline}
+            multiline={TextInputProps.multiline}
           />
         )}
 
@@ -211,7 +211,7 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
             style={$rightAccessoryStyle}
             status={status}
             editable={!disabled}
-            multiline={!!TextInputProps.multiline}
+            multiline={TextInputProps.multiline}
           />
         )}
       </View>
@@ -237,11 +237,10 @@ const $labelStyle: TextStyle = {
 const $inputWrapperStyle: ViewStyle = {
   flexDirection: "row",
   alignItems: "flex-start",
-  borderWidth: vs(1.5),
-  backgroundColor: colors.palette.neutral100,
+  borderBottomWidth: vs(0.5),
+  backgroundColor: colors.palette.primary100,
   borderColor: colors.border,
   overflow: "hidden",
-  borderRadius: ms(8),
 }
 
 const $inputStyle: TextStyle = {
@@ -255,7 +254,7 @@ const $inputStyle: TextStyle = {
   paddingVertical: 0,
   paddingHorizontal: 0,
   marginVertical: spacing.xs,
-  marginHorizontal: spacing.md,
+  marginHorizontal: spacing.sm,
 }
 
 const $helperStyle: TextStyle = {
