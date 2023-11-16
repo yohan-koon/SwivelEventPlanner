@@ -1,12 +1,11 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { colors } from "../theme";
-import { ImageUploadScreen, LoginScreen, SignUpScreen, UserInfoScreen } from "../screens";
+import { ProfileImageUploadScreen, LoginScreen, SignUpScreen, UserInfoScreen } from "../screens";
 
 export type OnboardingNavigatorParamList = {
-    Splash: undefined;
     Login: undefined;
     SignUp: undefined;
-    ImageUpload: undefined;
+    ProfileImageUpload: undefined;
     UserInfo: undefined;
 };
 
@@ -21,7 +20,7 @@ export const OnboardingNavigator = () => {
             }}>
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />
-            <Stack.Screen name="ImageUpload" component={ImageUploadScreen} />
+            <Stack.Screen name="ProfileImageUpload" component={ProfileImageUploadScreen} />
             <Stack.Screen name="UserInfo" component={UserInfoScreen} />
         </Stack.Navigator>
     );
