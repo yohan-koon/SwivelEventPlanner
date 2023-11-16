@@ -1,9 +1,9 @@
 import common from './common';
-import walktroughScreen from './walkthrough-screen';
+import loginScreen from './login-screen';
 
 const en = {
     common,
-    walktroughScreen,
+    loginScreen,
 }
 
 export default en;
