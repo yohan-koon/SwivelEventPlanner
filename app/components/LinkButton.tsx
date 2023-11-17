@@ -1,4 +1,4 @@
-import React, { ComponentType } from "react"
+import React, { ComponentType, FC } from "react"
 import { StyleProp, TextStyle, TouchableOpacityProps, TouchableOpacity, ViewStyle } from "react-native"
 import { colors, spacing, typography } from "../theme"
 import { TextProps, Text } from "../components"
@@ -49,10 +49,8 @@ export interface LinkButtonProps extends TouchableOpacityProps {
 /**
  * Describe your component here
  */
-export const LinkButton = (props: LinkButtonProps) => {
-  const { style: $viewStyleOverride, tx, text, txOptions, textStyle: $textStyleOverride, RightAccessory, LeftAccessory, ...rest } = props
-
-  const preset: Presets = $viewPresets[props.preset] ? props.preset : "default";
+export const LinkButton: FC<LinkButtonProps> = ({ style: $viewStyleOverride, tx, text, txOptions, textStyle: $textStyleOverride, RightAccessory, LeftAccessory, preset: presetOverride, ...rest }) => {
+  const preset: Presets = $viewPresets[presetOverride] ? presetOverride : "default";
 
   function $viewStyle() {
     return [

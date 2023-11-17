@@ -1,5 +1,5 @@
 import { SafeAreaView, ScrollView, TextStyle, View, ViewStyle } from 'react-native'
-import React from 'react'
+import React, { FC } from 'react'
 import { NetworkImage } from './NetworkImage'
 import { ms } from '../utils'
 import { ImageStyle } from 'react-native-fast-image'
@@ -15,12 +15,13 @@ import { APP_VERSION } from '../constants'
 import { useTranslation } from 'react-i18next'
 
 interface DrawerLayoutProps {
+  /**
+   * Navigation prop
+   */
   navigation: any
-
 }
 
-export const DrawerLayout = (props: DrawerLayoutProps) => {
-  const { navigation } = props;
+export const DrawerLayout: FC<DrawerLayoutProps> = ({navigation}) => {
   const { t } = useTranslation();
 
   return (

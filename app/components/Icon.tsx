@@ -8,7 +8,7 @@ import {
     ViewProps,
     ViewStyle,
 } from 'react-native';
-import React, { ComponentType } from 'react';
+import React, { ComponentType, FC } from 'react';
 import { colors } from '../theme';
 import { ms } from '../utils';
 
@@ -41,15 +41,14 @@ interface IconProps extends TouchableOpacityProps {
     onPress?: TouchableOpacityProps['onPress'];
 }
 
-export const Icon = (props: IconProps) => {
-    const {
-        icon,
-        color = colors.palette.neutral700,
-        size = ms(24),
-        style: $imageStyleOverride,
-        containerStyle: $containerStyleOverride,
-        ...WrapperProps
-    } = props;
+export const Icon: FC<IconProps> = ({
+    icon,
+    color = colors.palette.neutral700,
+    size = ms(24),
+    style: $imageStyleOverride,
+    containerStyle: $containerStyleOverride,
+    ...WrapperProps
+}) => {
 
     const isPressable = !!WrapperProps.onPress;
     const Wrapper: ComponentType<ViewProps | TouchableOpacityProps> = isPressable
