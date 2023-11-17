@@ -50,7 +50,6 @@ export const ProfileImageUploadScreen: FC = () => {
           </View>
           <ImageUploaderButton
             style={$imageUploaderButton}
-            Accessory={CameraButtonAccessory}
             onPress={captureImage}
           />
         </View>

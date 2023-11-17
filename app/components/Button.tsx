@@ -1,4 +1,4 @@
-import React, { ComponentType } from "react"
+import React, { ComponentType, FC } from "react"
 import {
   Pressable,
   PressableProps,
@@ -80,23 +80,23 @@ export interface ButtonProps extends PressableProps {
  *
  * - [Documentation and Examples](https://github.com/infinitered/ignite/blob/master/docs/Components-Button.md)
  */
-export const Button = (props: ButtonProps) => {
-  const {
-    tx,
-    text,
-    txOptions,
-    style: $viewStyleOverride,
-    pressedStyle: $pressedViewStyleOverride,
-    textStyle: $textStyleOverride,
-    pressedTextStyle: $pressedTextStyleOverride,
-    children,
-    RightAccessory,
-    LeftAccessory,
-    loading,
-    ...rest
-  } = props
+export const Button: FC<ButtonProps> = ({
+  tx,
+  text,
+  txOptions,
+  style: $viewStyleOverride,
+  pressedStyle: $pressedViewStyleOverride,
+  textStyle: $textStyleOverride,
+  pressedTextStyle: $pressedTextStyleOverride,
+  children,
+  RightAccessory,
+  LeftAccessory,
+  loading,
+  preset: presetOverride,
+  ...rest
+}) => {
 
-  const preset: Presets = $viewPresets[props.preset] ? props.preset : "filled"
+  const preset: Presets = $viewPresets[presetOverride] ? presetOverride : "filled"
   function $viewStyle({ pressed }) {
     return [
       $viewPresets[preset],
