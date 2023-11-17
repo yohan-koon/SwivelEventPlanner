@@ -3,6 +3,9 @@ import loginScreen from './login-screen';
 import signupScreen from './signup-screen';
 import profileImageUploadScreen from './profile-image-upload-screen';
 import personalInfoScreen from './personal-info-screen';
+import profileNavigator from './profile-navigator';
+import mainNavigator from './main-navigator';
+import profileScreen from './profile-screen';
 
 const en = {
     common,
@@ -10,6 +13,9 @@ const en = {
     signupScreen,
     profileImageUploadScreen,
     personalInfoScreen,
+    profileNavigator,
+    mainNavigator,
+    profileScreen
 }
 
 export default en;

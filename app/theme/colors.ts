@@ -32,7 +32,7 @@ const palette = {
     accent900: "#FFBB50",
 
     error100: "#F2D6CD",
-    error500: "#D2042D",
+    error500: "#EB5757",
 }
 
 export const colors = {

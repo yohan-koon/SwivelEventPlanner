@@ -24,7 +24,7 @@ interface NetworkImageProps extends FastImageProps {
 }
 
 export const NetworkImage = (props: NetworkImageProps) => {
-  const { source, style: $styleOverride, resizeMode = 'cover', placeholder = 'landscape', ...rest } = props;
+  const { source, style: $styleOverride, resizeMode = 'cover', placeholder = 'image', ...rest } = props;
   const [isLoading, setIsLoading] = useState(true);
   return (<View>
     <FastImage
@@ -50,7 +50,8 @@ export const NetworkImage = (props: NetworkImageProps) => {
 }
 
 export const defaultPlaceholderRegistry = {
-  landscape: require('../../assets/images/image-placeholder.png')
+  image: require('../../assets/images/image-placeholder.png'),
+  user: require('../../assets/images/user-placeholder.png'),
 }
 
 const $placeholderContainerStyle: ViewStyle = {
