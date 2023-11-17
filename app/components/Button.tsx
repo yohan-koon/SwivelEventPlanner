@@ -138,7 +138,7 @@ export const Button = (props: ButtonProps) => {
 
 const $baseViewStyle: ViewStyle = {
   minHeight: vs(44),
-  borderRadius: ms(8),
+  borderRadius: ms(2),
   justifyContent: "center",
   alignItems: "center",
   flexDirection: "row",

@@ -20,7 +20,7 @@ interface LoginFormValues {
 
 export const PersonalInfoScreen: FC = () => {
   const navigation = useNavigation<NavigationProp<OnboardingNavigatorParamList>>()
-  const {t} = useTranslation()
+  const { t } = useTranslation()
 
   const lastNameRef = useRef<TextInput>(null)
   const emailRef = useRef<TextInput>(null)
@@ -62,7 +62,7 @@ export const PersonalInfoScreen: FC = () => {
     >
       <Formik initialValues={initialFormValues} validationSchema={getPersonalInfoFormValidationSchema(t)} onSubmit={(values) => {
         console.log({ values })
-        
+
       }}>
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
           <>
@@ -73,7 +73,7 @@ export const PersonalInfoScreen: FC = () => {
                 <Text tx="personalInfoScreen:subTitle" />
               </View>
               <View style={$formContainer}>
-              <TextField
+                <TextField
                   labelTx="personalInfoScreen:firstNameLabel"
                   textContentType="name"
                   keyboardType="name-phone-pad"

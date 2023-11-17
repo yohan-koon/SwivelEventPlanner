@@ -1,6 +1,6 @@
 import { TextStyle, View, ViewStyle } from 'react-native'
 import React, { FC, useMemo, useState } from 'react'
-import { Button, ButtonAccessoryProps, Icon, RoundedButton, RoundedButtonAccessoryProps, Screen, Spacer, Text } from '../components'
+import { Button, ButtonAccessoryProps, Icon, ImageUploaderButton, ImageUploaderButtonAccessoryProps, Screen, Spacer, Text } from '../components'
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { OnboardingNavigatorParamList } from '../navigators';
 import { colors, spacing } from '../theme';
@@ -12,9 +12,9 @@ export const ProfileImageUploadScreen: FC = () => {
     const [profileImage, setProfileImage] = useState(null)
 
     //Camera Icon for ImageUploader Button
-    const CameraButtonAccessory: FC<RoundedButtonAccessoryProps> = useMemo(
+    const CameraButtonAccessory: FC<ImageUploaderButtonAccessoryProps> = useMemo(
       () =>
-        function CameraButtonAccessory(props: RoundedButtonAccessoryProps) {
+        function CameraButtonAccessory(props: ImageUploaderButtonAccessoryProps) {
           return <Icon icon="camera" size={ms(13.5)} {...props} />
         },
       [],
@@ -48,7 +48,7 @@ export const ProfileImageUploadScreen: FC = () => {
             <Spacer mainAxisSize={spacing.sm} />
             <Text tx="profileImageUploadScreen:subTitle" style={$title} />
           </View>
-          <RoundedButton
+          <ImageUploaderButton
             style={$imageUploaderButton}
             Accessory={CameraButtonAccessory}
             onPress={captureImage}

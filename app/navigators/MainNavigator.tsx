@@ -1,10 +1,11 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, ViewStyle } from 'react-native'
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeNavigator } from './HomeNavigator';
 import { ProfileNavigator } from './ProfileNavigator';
 import { Icon, IconTypes } from '../components';
 import { colors } from '../theme';
+import { useTranslation } from 'react-i18next';
 
 export type MainNavigatorParamList = {
     HomeNav: undefined,
@@ -17,22 +18,29 @@ const Tab = createBottomTabNavigator<MainNavigatorParamList>();
 export const MainNavigator = () => {
     const activeTintColor = colors.palette.primary900;
     const inactiveTintColor = colors.palette.neutral400;
+    const {t} = useTranslation();
 
     const renderTabBarIcon = (color: string, size: number, icon: IconTypes) => {
         return <Icon icon={icon} color={color} size={size} />
     }
     return (
-        <Tab.Navigator screenOptions={{ headerShown: false, tabBarShowLabel: false }}>
+        <Tab.Navigator screenOptions={{ headerShown: false, tabBarStyle: $tabBarStyle}}>
             <Tab.Screen name="HomeNav" component={HomeNavigator} options={{
                 tabBarActiveTintColor: activeTintColor,
                 tabBarInactiveTintColor: inactiveTintColor,
-                tabBarIcon: ({ color, size }) => renderTabBarIcon(color, size, 'home')
+                tabBarIcon: ({ color, size }) => renderTabBarIcon(color, size, 'home'),
+                tabBarLabel: t('mainNavigator:home')
             }} />
             <Tab.Screen name="ProfileNav" component={ProfileNavigator} options={{
                 tabBarActiveTintColor: activeTintColor,
                 tabBarInactiveTintColor: inactiveTintColor,
-                tabBarIcon: ({ color, size }) => renderTabBarIcon(color, size, 'more')
+                tabBarIcon: ({ color, size }) => renderTabBarIcon(color, size, 'more'),
+                tabBarLabel: t('mainNavigator:profile')
             }} />
         </Tab.Navigator>
     )
+}
+
+const $tabBarStyle : ViewStyle = {
+    backgroundColor: colors.palette.neutral900,
 }

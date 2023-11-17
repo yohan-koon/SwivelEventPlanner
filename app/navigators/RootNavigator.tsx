@@ -12,7 +12,7 @@ export type RootNavigatorParamList = {
 const Stack = createNativeStackNavigator<RootNavigatorParamList>();
 
 export const RootNavigator = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(true);
 
     return (
         <NavigationContainer>
