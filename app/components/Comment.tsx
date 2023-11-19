@@ -6,12 +6,13 @@ import { ms } from '../utils'
 import { ImageStyle } from 'react-native-fast-image'
 import { NetworkImage } from './NetworkImage'
 import { Spacer } from './Spacer'
+import { Comment as CommentType } from '../redux/posts'
 
 interface CommentProps {
     /**
      * The data to display
      */
-    data: any
+    data: CommentType
 }
 
 export const Comment: FC<CommentProps> = ({ data }) => {

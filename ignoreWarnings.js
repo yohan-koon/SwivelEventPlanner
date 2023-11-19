@@ -3,7 +3,8 @@ import { LogBox } from "react-native";
 if (__DEV__) {
   const ignoreWarns = [
     "ViewPropTypes will be removed from React Native",
-    "A non-serializable value was detected"
+    "A non-serializable value was detected",
+    "SerializableStateInvariantMiddleware",
   ];
 
   const warn = console.warn;
