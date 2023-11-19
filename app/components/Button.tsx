@@ -69,6 +69,10 @@ export interface ButtonProps extends PressableProps {
    */
   loading?: boolean
   /**
+   * loading text
+   */
+  loadingTx?: TextProps["tx"]
+  /**
    * Children components.
    */
   children?: React.ReactNode
@@ -92,6 +96,7 @@ export const Button: FC<ButtonProps> = ({
   RightAccessory,
   LeftAccessory,
   loading,
+  loadingTx,
   preset: presetOverride,
   ...rest
 }) => {
@@ -116,18 +121,18 @@ export const Button: FC<ButtonProps> = ({
     <Pressable style={$viewStyle} accessibilityRole="button" disabled={loading} {...rest}>
       {(state) => (
         <>
-          {!!LeftAccessory && <LeftAccessory style={$leftAccessoryStyle} pressableState={state} />}
+          {!!LeftAccessory && !loading && <LeftAccessory style={$leftAccessoryStyle} pressableState={state} />}
 
-          {loading ? <Text tx={'common:loading'} style={$textStyle(state)}/> :<Text tx={tx} text={text} txOptions={txOptions} style={$textStyle(state)}>
+          {loading ? <Text tx={loadingTx ? loadingTx : 'common:loading'} style={$textStyle(state)}/> :<Text tx={tx} text={text} txOptions={txOptions} style={$textStyle(state)}>
             {children}
           </Text>}
 
           {loading && <>
             <Spacer crossAxisSize={spacing.xs} />
-            <ActivityIndicator size="small" color={colors.palette.neutral100}  />
+            <ActivityIndicator size="small" color={colors.palette.neutral100} style={$loader} />
           </>}
 
-          {!!RightAccessory && (
+          {!!RightAccessory && !loading && (
             <RightAccessory style={$rightAccessoryStyle} pressableState={state} />
           )}
         </>
@@ -193,4 +198,8 @@ const $pressedTextPresets: Record<Presets, StyleProp<TextStyle>> = {
   default: { opacity: 0.9 },
   filled: { opacity: 0.9 },
   reversed: { opacity: 0.9 }
+}
+
+const $loader: ViewStyle = {
+  transform: [{ scale: 0.8 }],
 }

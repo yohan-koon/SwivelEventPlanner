@@ -1,2 +1,2 @@
 export * from './loadingStatus'
-export * from './paginationConfig'
+export * from './baseState';

@@ -4,6 +4,7 @@ export default{
     edit: 'Edit',
     save: 'Save',
     loading: 'Loading...',
+    uploading: 'Uploading...',
     validations: {
         required: "{{fieldName}} is Required",
         email: "Email is invalid",

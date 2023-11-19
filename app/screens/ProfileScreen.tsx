@@ -1,11 +1,14 @@
 import { ScrollView, Text, TextInput, View, ViewStyle } from 'react-native';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, ImageUploaderButton, Screen, Spacer, TextField } from '../components';
 import { spacing } from '../theme';
 import { Formik } from 'formik';
-import { ms } from '../utils';
+import { displayMessage, ms } from '../utils';
 import { getPersonalInfoFormValidationSchema } from '../validations/personalInfoFormValidationSchema';
 import { useTranslation } from 'react-i18next';
+import { useReduxDispatch, useReduxSelector } from '../redux';
+import { launchCamera } from 'react-native-image-picker';
+import { IImageUploadRequest, User, updateUserInfoAction, uploadUserImageAction } from '../redux/user';
 
 interface ProfileFormValues {
   firstName: string;
@@ -17,6 +20,8 @@ interface ProfileFormValues {
 
 export const ProfileScreen = () => {
   const { t } = useTranslation();
+  const dispatch = useReduxDispatch(); 
+  const { user, uploadUserImage: {loading: uploadUserImageLoading, error: uploadUserImageError}, updateUserInfo: {loading: updateUserInfoLoading, error: updateUserInfoError} } = useReduxSelector(state => state.user);
 
   const lastNameRef = useRef<TextInput>(null);
   const emailRef = useRef<TextInput>(null);
@@ -24,14 +29,64 @@ export const ProfileScreen = () => {
   const addressRef = useRef<TextInput>(null);
 
   const [isFormEditable, setIsFormEditable] = useState(false);
+  const [imageSource, setImageSource] = useState<string>();
 
   const initialFormValues: ProfileFormValues = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    phoneNumber: '',
-    address: '',
+    firstName: user?.firstName || '',
+    lastName: user?.lastName || '',
+    email: user?.email || '',
+    phoneNumber: user?.phoneNumber || '',
+    address: user?.address || '',
   };
+
+  /**
+   * useEffect hook to handle loading, error and data for image uploading
+   */
+  useEffect(() => {
+    if (uploadUserImageLoading === 'loading') return;
+    if (uploadUserImageError) { return displayMessage(uploadUserImageError); }
+  }, [uploadUserImageLoading, uploadUserImageError, user]);
+
+  /**
+   * useEffect hook to handle loading, error and data for updating user info
+   */
+  useEffect(() => {
+    if (updateUserInfoLoading === 'loading') return;
+    if (updateUserInfoError) { return displayMessage(updateUserInfoError); }
+    if (updateUserInfoLoading === 'succeeded') {
+      setIsFormEditable(false);
+    }
+  },[updateUserInfoLoading, updateUserInfoError, user])
+
+  /**
+   * Capture image from camera
+   */
+  const captureImage = async () => {
+    try {
+      const result = await launchCamera({
+        mediaType: 'photo',
+        quality: 1,
+        includeBase64: true,
+      });
+      const src = result?.assets?.[0]?.uri;
+      setImageSource(src)
+      uploadImage(src)
+    } catch (error: any) {
+      console.log({error})
+      displayMessage(error)
+    }
+  }
+
+  /**
+   * Upload image to firebase storage
+   */
+  const uploadImage = (src?: string) => {
+    if(!src) return displayMessage(t('profileImageUploadScreen:takeAPhotoFirst'))
+    if(!user) return displayMessage(t('profileImageUploadScreen:invalidUser'))
+    const payload: IImageUploadRequest = { uri: src ?? '', user};
+    dispatch(uploadUserImageAction(payload))
+  }
+
 
   return (
     <Screen safeAreaEdges={[]} contentContainerStyle={$root} preset="fixed">
@@ -39,7 +94,8 @@ export const ProfileScreen = () => {
         initialValues={initialFormValues}
         validationSchema={getPersonalInfoFormValidationSchema(t)}
         onSubmit={values => {
-          console.log({ values });
+          const updatedUser = {...user, ...values} as User
+          dispatch(updateUserInfoAction(updatedUser));
         }}>
         {({
           handleChange,
@@ -51,7 +107,7 @@ export const ProfileScreen = () => {
         }) => (
           <>
             <ScrollView style={$topContainer}>
-              <ImageUploaderButton style={$imageUploader}/>
+              <ImageUploaderButton style={$imageUploader} isEditable={isFormEditable} src={user?.imageUrl} onPress={captureImage}/>
               <Spacer mainAxisSize={spacing.md} />
               <View style={$formContainer}>
                 <TextField
@@ -70,7 +126,7 @@ export const ProfileScreen = () => {
                       ? errors.firstName
                       : undefined
                   }
-                  editable={isFormEditable}
+                  editable={isFormEditable && uploadUserImageLoading !== 'loading' && updateUserInfoLoading !== 'loading'}
                 />
                 <Spacer mainAxisSize={spacing.md} />
                 <TextField
@@ -90,7 +146,7 @@ export const ProfileScreen = () => {
                       ? errors.lastName
                       : undefined
                   }
-                  editable={isFormEditable}
+                  editable={isFormEditable && uploadUserImageLoading !== 'loading' && updateUserInfoLoading !== 'loading'}
                 />
                 <Spacer mainAxisSize={spacing.md} />
                 <TextField
@@ -108,7 +164,7 @@ export const ProfileScreen = () => {
                   helper={
                     touched.email && errors.email ? errors.email : undefined
                   }
-                  editable={isFormEditable}
+                  editable={false}
                 />
                 <Spacer mainAxisSize={spacing.md} />
                 <TextField
@@ -128,7 +184,7 @@ export const ProfileScreen = () => {
                       ? errors.phoneNumber
                       : undefined
                   }
-                  editable={isFormEditable}
+                  editable={isFormEditable && uploadUserImageLoading !== 'loading' && updateUserInfoLoading !== 'loading'}
                 />
                 <Spacer mainAxisSize={spacing.md} />
                 <TextField
@@ -148,11 +204,11 @@ export const ProfileScreen = () => {
                       ? errors.address
                       : undefined
                   }
-                  editable={isFormEditable}
+                  editable={isFormEditable && uploadUserImageLoading !== 'loading' && updateUserInfoLoading !== 'loading'}
                 />
               </View>
             </ScrollView>
-            <Button tx={isFormEditable ? "common:save" : "common:edit"} onPress={() => setIsFormEditable(!isFormEditable)} style={$button} />
+            <Button tx={isFormEditable ? "common:save" : "common:edit"} onPress={() => !isFormEditable ? setIsFormEditable(!isFormEditable) : handleSubmit()} style={$button} loading={uploadUserImageLoading === 'loading' || updateUserInfoLoading === 'loading'} />
           </>
         )}
       </Formik>

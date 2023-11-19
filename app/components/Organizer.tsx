@@ -21,7 +21,7 @@ interface OrganizerProps {
 export const Organizer: FC<OrganizerProps> = ({ style: $styleOverride, data }) => {
     return (
         <View style={[$root, $styleOverride]}>
-            <NetworkImage style={$userImage} placeholder='user'/>
+            <NetworkImage style={$userImage} placeholder='user' source={{uri: ''}}/>
             <View style={$detailContainer}>
                 <Text text={data.name} preset='h5' size='sm' style={$name}/>
                 <Text text={data.email} preset='formLabel' size='xs'/>
