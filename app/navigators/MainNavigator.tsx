@@ -1,11 +1,12 @@
 import { StyleSheet, ViewStyle } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeNavigator } from './HomeNavigator';
 import { ProfileNavigator } from './ProfileNavigator';
 import { Icon, IconTypes } from '../components';
 import { colors } from '../theme';
 import { useTranslation } from 'react-i18next';
+import { loadExistingUserAction, signOutAction, useReduxDispatch, useReduxSelector } from '../redux';
 
 export type MainNavigatorParamList = {
     HomeNav: undefined,
@@ -19,6 +20,17 @@ export const MainNavigator = () => {
     const activeTintColor = colors.palette.primary900;
     const inactiveTintColor = colors.palette.neutral400;
     const {t} = useTranslation();
+    const dispatch = useReduxDispatch();
+    const {firebaseUser} = useReduxSelector(state => state.user);
+
+    useEffect(() => {
+        if(!firebaseUser) {
+            dispatch(signOutAction());
+        }else{
+            dispatch(loadExistingUserAction(firebaseUser?.uid))
+        };
+        
+    },[])
 
     const renderTabBarIcon = (color: string, size: number, icon: IconTypes) => {
         return <Icon icon={icon} color={color} size={size} />

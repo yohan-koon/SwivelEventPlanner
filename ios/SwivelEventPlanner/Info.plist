@@ -51,5 +51,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera access is needed to capture your profile picture securely</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Grant access to your photos for customizing your profile picture</string>
 </dict>
 </plist>

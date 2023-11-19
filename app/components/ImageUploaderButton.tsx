@@ -64,7 +64,7 @@ export const ImageUploaderButton: FC<ImageUploaderButtonProps> = ({
       style={$containerStyle()}
       disabled={!isEditable}
       {...rest}>
-      <ImageBackground
+      {src && <ImageBackground
         source={{uri: src}}
         style={$containerStyle()}
         imageStyle={{borderRadius: ms(size)}}
@@ -77,7 +77,15 @@ export const ImageUploaderButton: FC<ImageUploaderButtonProps> = ({
             style={$rightAccessoryStyle}
           />
         )}
-      </ImageBackground>
+      </ImageBackground>}
+      {!src && isEditable && (
+        <Icon
+          icon="camera"
+          size={ms(24)}
+          color={colors.palette.primary500}
+          style={$rightAccessoryStyle}
+        />
+      )}
     </TouchableOpacity>
   );
 };

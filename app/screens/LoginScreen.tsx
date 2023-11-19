@@ -1,5 +1,5 @@
 import {TextInput, TouchableOpacity, View, ViewStyle} from 'react-native';
-import React, {FC, useMemo, useRef, useState} from 'react';
+import React, {FC, useEffect, useMemo, useRef, useState} from 'react';
 import {
   Button,
   ButtonAccessoryProps,
@@ -16,11 +16,18 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {OnboardingNavigatorParamList} from '../navigators';
 import {colors, spacing} from '../theme';
 import {Formik} from 'formik';
-import {ms} from '../utils';
+import {displayMessage, ms} from '../utils';
 import {getLoginFormValidationSchema} from '../validations';
 import {useTranslation} from 'react-i18next';
+import {
+  loadExistingUserAction,
+  useReduxDispatch,
+  useReduxSelector,
+} from '../redux';
+import {User, signInAction} from '../redux/user';
+import { use } from 'i18next';
 
-interface LoginFormValues {
+export interface LoginFormValues {
   email: string;
   password: string;
 }
@@ -29,9 +36,65 @@ export const LoginScreen: FC = () => {
   const navigation =
     useNavigation<NavigationProp<OnboardingNavigatorParamList>>();
   const {t} = useTranslation();
+  const dispatch = useReduxDispatch();
+  const {
+    user,
+    firebaseUser,
+    loadExistingUser: {
+      loading: loadExistingUserLoading,
+      error: loadExistingUserError,
+    },
+    signIn: {loading: signInLoading, error: signInError},
+  } = useReduxSelector(state => state.user);
 
   const passwordRef = useRef<TextInput>(null);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  useEffect(() => {
+    loadExistingUser();
+  }, [firebaseUser]);
+
+  useEffect(() => {
+    if (loadExistingUserLoading === 'loading') return;
+    if (loadExistingUserError) return;
+    if (loadExistingUserLoading === 'succeeded' && user) {
+      handleOnboardingNavigation(user);
+    }
+  }, [loadExistingUserLoading, loadExistingUserError, user]);
+
+  /**
+   * dispatch to load existing user
+   */
+  const loadExistingUser = () => {
+    if (firebaseUser) {
+      dispatch(loadExistingUserAction(firebaseUser.uid));
+    }
+  };
+
+  /**
+   * useEffect hook to handle loading, error and data for signin
+   */
+  useEffect(() => {
+    if (signInLoading === 'loading') return;
+    if (signInError) {
+      return displayMessage(signInError);
+    }
+    if (signInLoading === 'succeeded' && user) {
+      handleOnboardingNavigation(user);
+    }
+  }, [signInLoading, signInError, user]);
+
+  /**
+   * Handle Onboarding Navigation
+   */
+  const handleOnboardingNavigation = (user: User) => {
+    if (user && user.imageUrl && (!user.firstName || !user.lastName)) {
+      return navigation.navigate('PersonalInfo');
+    }
+    if (user && !user.imageUrl) {
+      return navigation.navigate('ProfileImageUpload');
+    }
+  };
 
   const initialFormValues: LoginFormValues = {
     email: '',
@@ -110,10 +173,9 @@ export const LoginScreen: FC = () => {
       safeAreaEdges={['top', 'bottom']}>
       <Formik
         initialValues={initialFormValues}
-        //validationSchema={getLoginFormValidationSchema(t)}
+        validationSchema={getLoginFormValidationSchema(t)}
         onSubmit={values => {
-          console.log({values});
-          navigation.navigate('ProfileImageUpload')
+          dispatch(signInAction(values));
         }}>
         {({
           handleChange,
@@ -146,6 +208,7 @@ export const LoginScreen: FC = () => {
                   helper={
                     touched.email && errors.email ? errors.email : undefined
                   }
+                  editable={loadExistingUserLoading !== 'loading' || signInLoading !== 'loading'}
                 />
                 <Spacer mainAxisSize={spacing.md} />
                 <TextField
@@ -167,6 +230,7 @@ export const LoginScreen: FC = () => {
                       ? errors.password
                       : undefined
                   }
+                  editable={loadExistingUserLoading !== 'loading' || signInLoading !== 'loading'}
                 />
                 <Spacer mainAxisSize={spacing.lg} />
                 <LinkButton
@@ -181,12 +245,14 @@ export const LoginScreen: FC = () => {
                 tx="loginScreen:loginBtn"
                 RightAccessory={ButtonRightAccessory}
                 onPress={() => handleSubmit()}
+                loading={loadExistingUserLoading === 'loading' || signInLoading === 'loading'}
               />
               <Spacer mainAxisSize={spacing.md} />
               <Button
                 tx="loginScreen:signUpBtn"
                 RightAccessory={ButtonRightAccessory}
                 onPress={() => navigation?.navigate('SignUp')}
+                disabled={loadExistingUserLoading === 'loading' || signInLoading === 'loading'}
               />
             </View>
           </>

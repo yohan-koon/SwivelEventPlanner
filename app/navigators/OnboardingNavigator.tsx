@@ -19,9 +19,9 @@ export const OnboardingNavigator = () => {
                 navigationBarColor: colors.background,
             }}>
             <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="SignUp" component={SignUpScreen} />
             <Stack.Screen name="ProfileImageUpload" component={ProfileImageUploadScreen} />
             <Stack.Screen name="PersonalInfo" component={PersonalInfoScreen} />
+            <Stack.Screen name="SignUp" component={SignUpScreen} />
         </Stack.Navigator>
     );
 };

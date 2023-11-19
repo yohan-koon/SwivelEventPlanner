@@ -1,16 +1,17 @@
 import { TextInput, View, ViewStyle } from 'react-native'
-import React, { FC, useMemo, useRef, useState } from 'react'
+import React, { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { Screen, Spacer, TextField, Text, ButtonAccessoryProps, Icon, Button } from '../components'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { OnboardingNavigatorParamList } from '../navigators'
-import { ms } from '../utils'
+import { displayMessage, ms } from '../utils'
 import { colors, spacing } from '../theme'
 import { Formik } from 'formik'
 import { useTranslation } from 'react-i18next'
-import { TFunction } from 'i18next'
 import { getPersonalInfoFormValidationSchema } from '../validations'
+import { useReduxDispatch, useReduxSelector } from '../redux'
+import { User, updateUserInfoAction } from '../redux/user'
 
-interface LoginFormValues {
+interface PersonalInfoFormValues {
   firstName: string
   lastName: string
   email: string
@@ -21,6 +22,8 @@ interface LoginFormValues {
 export const PersonalInfoScreen: FC = () => {
   const navigation = useNavigation<NavigationProp<OnboardingNavigatorParamList>>()
   const { t } = useTranslation()
+  const dispatch = useReduxDispatch()
+  const {user, updateUserInfo: {loading, error}} = useReduxSelector(state => state.user)
 
   const lastNameRef = useRef<TextInput>(null)
   const emailRef = useRef<TextInput>(null)
@@ -29,13 +32,18 @@ export const PersonalInfoScreen: FC = () => {
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false)
 
-  const initialFormValues: LoginFormValues = {
+  const initialFormValues: PersonalInfoFormValues = {
     firstName: "",
     lastName: "",
-    email: "",
+    email: user?.email || "",
     phoneNumber: "",
     address: "",
   }
+
+  useEffect(() => {
+    if (loading === 'loading') return;
+    if (error) { return displayMessage(error); }
+  }, [loading, error]);
 
   //Previous Icon for Back Buttons
   const BackButtonLeftAccessory: FC<ButtonAccessoryProps> = useMemo(
@@ -61,8 +69,8 @@ export const PersonalInfoScreen: FC = () => {
       safeAreaEdges={["top", "bottom"]}
     >
       <Formik initialValues={initialFormValues} validationSchema={getPersonalInfoFormValidationSchema(t)} onSubmit={(values) => {
-        console.log({ values })
-
+        const updatedUser = {...user, ...values} as User
+        dispatch(updateUserInfoAction(updatedUser));
       }}>
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
           <>
@@ -83,6 +91,7 @@ export const PersonalInfoScreen: FC = () => {
                   onBlur={handleBlur("firstName")}
                   value={values.firstName}
                   helper={touched.firstName && errors.firstName ? errors.firstName : undefined}
+                  editable={loading !== 'loading'}
                 />
                 <Spacer mainAxisSize={spacing.md} />
                 <TextField
@@ -96,6 +105,7 @@ export const PersonalInfoScreen: FC = () => {
                   onBlur={handleBlur("lastName")}
                   value={values.lastName}
                   helper={touched.lastName && errors.lastName ? errors.lastName : undefined}
+                  editable={loading !== 'loading'}
                 />
                 <Spacer mainAxisSize={spacing.md} />
                 <TextField
@@ -109,6 +119,7 @@ export const PersonalInfoScreen: FC = () => {
                   onBlur={handleBlur("email")}
                   value={values.email}
                   helper={touched.email && errors.email ? errors.email : undefined}
+                  editable={false}
                 />
                 <Spacer mainAxisSize={spacing.md} />
                 <TextField
@@ -121,7 +132,9 @@ export const PersonalInfoScreen: FC = () => {
                   onChangeText={handleChange("phoneNumber")}
                   onBlur={handleBlur("phoneNumber")}
                   value={values.phoneNumber}
-                  helper={touched.phoneNumber && errors.phoneNumber ? errors.phoneNumber : undefined} />
+                  helper={touched.phoneNumber && errors.phoneNumber ? errors.phoneNumber : undefined}
+                  editable={loading !== 'loading'} 
+                  />
                 <Spacer mainAxisSize={spacing.md} />
                 <TextField
                   ref={addressRef}
@@ -133,7 +146,9 @@ export const PersonalInfoScreen: FC = () => {
                   onChangeText={handleChange("address")}
                   onBlur={handleBlur("address")}
                   value={values.address}
-                  helper={touched.address && errors.address ? errors.address : undefined} />
+                  helper={touched.address && errors.address ? errors.address : undefined}
+                  editable={loading !== 'loading'}
+                   />
               </View>
             </View>
             <View style={$bottomContainer}>
@@ -143,6 +158,7 @@ export const PersonalInfoScreen: FC = () => {
                 tx="common:back"
                 LeftAccessory={BackButtonLeftAccessory}
                 onPress={() => navigation.goBack()}
+                loading={loading === 'loading'}
               />
               <Spacer crossAxisSize={spacing.sm} />
               <Button style={$submitBtnContainer} tx="common:next" RightAccessory={NextButtonRightAccessory} onPress={() => handleSubmit()} />

@@ -1,7 +1,7 @@
 import { SafeAreaView, ScrollView, TextStyle, View, ViewStyle } from 'react-native'
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 import { NetworkImage } from './NetworkImage'
-import { ms } from '../utils'
+import { displayMessage, ms } from '../utils'
 import { ImageStyle } from 'react-native-fast-image'
 import { Text } from './Text'
 import { colors, spacing } from '../theme'
@@ -13,6 +13,7 @@ import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { ProfileNavigatorParamList } from '../navigators/ProfileNavigator'
 import { APP_VERSION } from '../constants'
 import { useTranslation } from 'react-i18next'
+import { signOutAction, useReduxDispatch, useReduxSelector } from '../redux'
 
 interface DrawerLayoutProps {
   /**
@@ -21,43 +22,58 @@ interface DrawerLayoutProps {
   navigation: any
 }
 
-export const DrawerLayout: FC<DrawerLayoutProps> = ({navigation}) => {
+export const DrawerLayout: FC<DrawerLayoutProps> = ({ navigation }) => {
   const { t } = useTranslation();
+  const dispatch = useReduxDispatch();
+  const { signOut: { loading, error } , user} = useReduxSelector((state) => state.user);
+
+  /**
+   * useEffect hook to handle loading, error and data for signOut
+   */
+  useEffect(() => {
+    if (loading === 'loading') return;
+    if (error) { return displayMessage(error); }
+  }, [loading, error]);
 
   return (
     <View style={$root}>
       <ScrollView style={$contentContainer}>
-        <SafeAreaView>
+        <SafeAreaView style={{ flex: 1 }}>
           <View style={$body}>
             <View style={$topContainer}>
               <View style={$header}>
-                <NetworkImage style={$image} source={{ uri: 'https://picsum.photos/200/300' }} />
+                <NetworkImage style={$image} source={{ uri: user?.imageUrl }} />
                 <Spacer crossAxisSize={spacing.sm} />
                 <View>
-                  <Text preset='h5' text='Jane cooper' />
-                  <Text preset='formLabel' text='jane@gmail.com' />
+                  <Text preset='h5' text={`${user?.firstName} ${user?.lastName}`}/>
+                  <Text preset='formLabel' text={user?.email} />
                 </View>
               </View>
               <DrawerItem
                 icon={() => <Icon icon='logout' color={colors.palette.error500} size={ms(16)} />}
                 label={t('profileNavigator:logout')}
-                onPress={() => { navigation?.closeDrawer() }}
+                onPress={() => {
+                  dispatch(signOutAction())
+                  navigation?.closeDrawer()
+                }}
                 style={$drawerItem}
                 labelStyle={$drawerItemLabel}
               />
             </View>
-            <View style={$footer}>
-              <Text tx="profileNavigator:version" txOptions={{ version: APP_VERSION }} />
-            </View>
+
           </View>
         </SafeAreaView>
       </ScrollView>
+      <View style={$footer}>
+        <Text tx="profileNavigator:version" txOptions={{ version: APP_VERSION }} />
+      </View>
     </View>
   )
 }
 
 const $root: ViewStyle = {
   flex: 1,
+  marginTop: spacing.xl,
 }
 
 const $contentContainer: ViewStyle = {
@@ -65,7 +81,7 @@ const $contentContainer: ViewStyle = {
 }
 
 const $topContainer: ViewStyle = {
-  height: ms(550),
+  flex: 1,
 }
 
 const $body: ViewStyle = {
@@ -88,6 +104,7 @@ const $image: ImageStyle = {
 const $footer: ViewStyle = {
   justifyContent: 'center',
   alignItems: 'center',
+  marginBottom: spacing.sm,
 }
 
 const $drawerItem: ViewStyle = {

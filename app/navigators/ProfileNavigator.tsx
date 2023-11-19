@@ -5,6 +5,7 @@ import {ImageStyle} from 'react-native-fast-image';
 import {ms} from '../utils';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {spacing} from '../theme';
+import { useReduxSelector } from '../redux';
 
 export type ProfileNavigatorParamList = {
   Profile: undefined;
@@ -13,6 +14,7 @@ export type ProfileNavigatorParamList = {
 const Drawer = createDrawerNavigator<ProfileNavigatorParamList>();
 
 export const ProfileNavigator = () => {
+  const {user} = useReduxSelector(state => state.user);
   return (
     <Drawer.Navigator
       drawerContent={props => <DrawerLayout {...props} />}
@@ -21,7 +23,7 @@ export const ProfileNavigator = () => {
           <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
             <NetworkImage
               style={$image}
-              source={{uri: 'https://picsum.photos/200/300'}}
+              source={{uri: user?.imageUrl}}
               placeholder="user"
             />
           </TouchableOpacity>

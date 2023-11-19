@@ -46,10 +46,10 @@ export const NetworkImage: FC<NetworkImageProps> = ({
     <View>
       <FastImage
         style={$styleOverride}
-        source={{
+        source={source && source != null && source.uri && source.uri !== '' ? {
           ...source,
           priority: FastImage.priority.normal,
-        }}
+        } : undefined}
         resizeMode={resizeMode}
         onLoadStart={() => setIsLoading(true)}
         onLoadEnd={() => setIsLoading(false)}

@@ -6,11 +6,12 @@ import { OnboardingNavigatorParamList } from '../navigators';
 import { ViewStyle } from 'react-native';
 import { colors, spacing } from '../theme';
 import { Formik } from 'formik';
-import { ms } from '../utils';
+import { displayMessage, ms } from '../utils';
 import { getSignUpFormValidationSchema } from '../validations';
 import { useTranslation } from 'react-i18next';
+import { signUpAction, useReduxDispatch, useReduxSelector } from '../redux';
 
-interface SignUpFormValues {
+export interface SignUpFormValues {
   email: string
   password: string
   confirmPassword: string
@@ -19,11 +20,23 @@ interface SignUpFormValues {
 export const SignUpScreen: FC = () => {
   const navigation = useNavigation<NavigationProp<OnboardingNavigatorParamList>>()
   const { t } = useTranslation()
+  const dispatch = useReduxDispatch()
+  const {signUp: {loading, error}, user} = useReduxSelector(state => state.user)
 
   const passwordRef = useRef<TextInput>(null)
   const confirmPasswordRef = useRef<TextInput>(null)
   const [isPasswordVisible, setIsPasswordVisible] = useState(false)
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false)
+
+  /**
+   * useEffect hook to handle loading, error and data for signUp
+   */
+  useEffect(() => {
+    if (loading === 'loading') return;
+    if (error) { return displayMessage(error); }
+    if (loading === 'succeeded' && user) { navigation.navigate('ProfileImageUpload') }
+  }, [loading, error]);
+
 
   const initialFormValues: SignUpFormValues = {
     email: "",
@@ -89,7 +102,7 @@ export const SignUpScreen: FC = () => {
       <Formik
         initialValues={initialFormValues}
         validationSchema={getSignUpFormValidationSchema(t)}
-        onSubmit={(values) => console.log({ values })}
+        onSubmit={(values) => {dispatch(signUpAction(values))}}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
           <>
@@ -113,6 +126,7 @@ export const SignUpScreen: FC = () => {
                   onBlur={handleBlur("email")}
                   value={values.email}
                   helper={touched.email && errors.email ? errors.email : undefined}
+                  editable={loading !== 'loading'}
                 />
                 <Spacer mainAxisSize={spacing.md} />
                 <TextField
@@ -130,6 +144,7 @@ export const SignUpScreen: FC = () => {
                   onBlur={handleBlur("password")}
                   value={values.password}
                   helper={touched.password && errors.password ? errors.password : undefined}
+                  editable={loading !== 'loading'}
                 />
                 <Spacer mainAxisSize={spacing.md} />
                 <TextField
@@ -151,6 +166,7 @@ export const SignUpScreen: FC = () => {
                       ? errors.confirmPassword
                       : undefined
                   }
+                  editable={loading !== 'loading'}
                 />
               </View>
             </View>
@@ -159,12 +175,14 @@ export const SignUpScreen: FC = () => {
                 tx="signupScreen:signUpBtn"
                 RightAccessory={ButtonRightAccessory}
                 onPress={() => handleSubmit()}
+                loading={loading === 'loading'}
               />
               <Spacer mainAxisSize={spacing.md} />
               <Button
                 tx="signupScreen:loginBtn"
                 RightAccessory={ButtonRightAccessory}
                 onPress={() => navigation.goBack()}
+                disabled={loading === 'loading'}
               />
             </View>
           </>
