@@ -5,19 +5,23 @@ import { Text } from './Text'
 import { Icon } from './Icon'
 import { ms } from '../utils'
 import { colors, spacing } from '../theme'
-import { Photo } from './Photo'
-import { photos } from '../seeds/photos'
 import { Seperator } from './Seperator'
 import { Spacer } from './Spacer'
+import { Photo } from './Photo'
+import { Photo as PhotoType } from '../redux/photos'
 
 interface PhotosProps {
   /**
    * An optional style override useful for padding & margin.
    */
   style?: ViewStyle
+  /**
+   * Photos data
+   */
+  photos: PhotoType[]
 }
 
-export const Photos: FC<PhotosProps> = ({ style: $styleOverride }) => {
+export const Photos: FC<PhotosProps> = ({ style: $styleOverride, photos }) => {
 
   //Next Icon for All Photos Button
   const AllPhotosRightAccessory: FC<LinkButtonAccessoryProps> = useMemo(

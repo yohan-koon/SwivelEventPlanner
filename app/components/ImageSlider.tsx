@@ -1,5 +1,5 @@
 import { TextStyle, View, ViewStyle } from 'react-native'
-import React, { FC } from 'react'
+import React, { FC, memo } from 'react'
 import Carousel from 'react-native-snap-carousel';
 import { NetworkImage } from './NetworkImage';
 import { ms } from '../utils';
@@ -15,6 +15,7 @@ interface ImageSliderProps {
 }
 
 export const ImageSlider : FC<ImageSliderProps> = ({ images }) => {
+    console.log({images})
     const carouselRef = React.useRef(null);
     const [activeIndex, setActiveIndex] = React.useState(0);
     return (
