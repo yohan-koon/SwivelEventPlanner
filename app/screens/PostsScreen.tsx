@@ -33,7 +33,6 @@ export const PostsScreen = () => {
         }
     }, [loading, error, posts]);
 
-    console.log({ sections })
     return (
         <Screen preset='fixed' style={$root}>
             <SectionList

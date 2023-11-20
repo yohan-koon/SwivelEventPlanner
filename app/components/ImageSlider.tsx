@@ -15,7 +15,6 @@ interface ImageSliderProps {
 }
 
 export const ImageSlider : FC<ImageSliderProps> = ({ images }) => {
-    console.log({images})
     const carouselRef = React.useRef(null);
     const [activeIndex, setActiveIndex] = React.useState(0);
     return (
