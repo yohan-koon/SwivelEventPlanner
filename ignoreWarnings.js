@@ -5,6 +5,7 @@ if (__DEV__) {
     "ViewPropTypes will be removed from React Native",
     "A non-serializable value was detected",
     "SerializableStateInvariantMiddleware",
+    "ReactImageView: Image source"
   ];
 
   const warn = console.warn;

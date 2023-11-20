@@ -3,7 +3,7 @@ import { IImageUploadRequest, User, UserStateType } from "./types";
 import { LoginFormValues, SignUpFormValues } from "../../screens";
 import { User as FirebaseUser } from "firebase/auth";
 
-const initialState : UserStateType = {
+export const initialState : UserStateType = {
     firebaseUser: null,
     user: null,
     signUp: {

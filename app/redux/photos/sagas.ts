@@ -6,7 +6,7 @@ import { getPhotosFailedAction, getPhotosSuccessAction } from "./slice";
 /**
  * Saga for get photos
  */
-function* getPhotos() {
+function* getPhotosSaga() {
   try {
     const photos: Photo[] = yield call(fetchPhotos);
     yield put(getPhotosSuccessAction(photos));
@@ -19,5 +19,5 @@ function* getPhotos() {
  * Watcher saga for get photos
  */
 export function* watchGetPhotos() {
-  yield takeLatest(GET_PHOTOS, getPhotos);
+  yield takeLatest(GET_PHOTOS, getPhotosSaga);
 }

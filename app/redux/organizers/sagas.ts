@@ -6,7 +6,7 @@ import { getOrganizersFailedAction, getOrganizersSuccessAction } from "./slice";
 /**
  * Saga for get organizers
  */
-function* getOrganizers() {
+export function* getOrganizersSaga() {
   try {
     const organizers: Organizer[] = yield call(fetchOrganizers);
     yield put(getOrganizersSuccessAction(organizers));
@@ -19,5 +19,5 @@ function* getOrganizers() {
  * Watcher saga for get organizers
  */
 export function* watchGetOrganizers() {
-  yield takeLatest(GET_ORGANIZERS, getOrganizers);
+  yield takeLatest(GET_ORGANIZERS, getOrganizersSaga);
 }

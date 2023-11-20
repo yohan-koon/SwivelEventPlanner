@@ -6,7 +6,7 @@ import { getPostsFailedAction, getPostsSuccessAction } from "./slice";
 /**
  * Saga for get posts
  */
-function* getPosts() {
+function* getPostsSaga() {
   try {
     const posts: Post[] = yield call(fetchPosts);
     const comments: Comment[] = yield call(fetchComments);
@@ -23,5 +23,5 @@ function* getPosts() {
  * Watcher saga for get posts
  */
 export function* watchGetPosts() {
-  yield takeLatest(GET_POSTS, getPosts);
+  yield takeLatest(GET_POSTS, getPostsSaga);
 }

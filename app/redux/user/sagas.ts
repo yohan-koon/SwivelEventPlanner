@@ -6,11 +6,12 @@ import { loginWithEmailAndPassword, logout, signUpWithEmailAndPassword } from ".
 import { IImageUploadRequest, LOAD_EXISTING_USER, SIGN_IN, SIGN_OUT, SIGN_UP, UPDATE_USER_INFO, UPLOAD_USER_IMAGE, User } from "./types";
 import { getUser, saveOrUpdateUser } from "../../services/firebase/userService";
 import { uploadImage } from "../../services/firebase/storageService";
+import { UserCredential } from "firebase/auth";
 
 /**
  * Saga for Sign Up
  */
-function* signUp(action: PayloadAction<SignUpFormValues>) {
+function* signUpSaga(action: PayloadAction<SignUpFormValues>) {
   try {
     const { email, password } = action.payload;
     const user: User =  yield call(signUpWithEmailAndPassword, email, password);
@@ -24,13 +25,13 @@ function* signUp(action: PayloadAction<SignUpFormValues>) {
  * Watcher saga for Sign Up
  */
 export function* watchSignUp() {
-  yield takeLatest(SIGN_UP, signUp);
+  yield takeLatest(SIGN_UP, signUpSaga);
 }
 
 /**
  * Saga for load existing user
  */
-function* loadExistingUser(action: PayloadAction<string>) {
+function* loadExistingUserSaga(action: PayloadAction<string>) {
   try {
     const user: User =  yield call(getUser, action.payload);
     yield put(loadExistingUserSuccessAction(user));
@@ -43,13 +44,13 @@ function* loadExistingUser(action: PayloadAction<string>) {
  * Watcher saga for load existing user
  */
 export function* watchLoadExistingUser() {
-  yield takeLatest(LOAD_EXISTING_USER, loadExistingUser);
+  yield takeLatest(LOAD_EXISTING_USER, loadExistingUserSaga);
 }
 
 /**
  * Saga for Sign Out
  */
-function* signOut() {
+function* signOutSaga() {
   try {
     yield call(logout);
     yield put(signOutSuccessAction());
@@ -62,13 +63,13 @@ function* signOut() {
  * Watcher saga for Sign Out
  */
 export function* watchSignOut() {
-  yield takeLatest(SIGN_OUT, signOut);
+  yield takeLatest(SIGN_OUT, signOutSaga);
 }
 
 /**
  * Saga for Image Upload
  */
-function* uploadUserImage(action: PayloadAction<IImageUploadRequest>) {
+function* uploadUserImageSaga(action: PayloadAction<IImageUploadRequest>) {
     try {
         const {user, uri} = action.payload;
         const imageUploadRequest = action.payload;
@@ -84,13 +85,13 @@ function* uploadUserImage(action: PayloadAction<IImageUploadRequest>) {
  * Watcher saga for Image Upload
  */
 export function* watchUploadUserImage() {
-    yield takeLatest(UPLOAD_USER_IMAGE, uploadUserImage);
+    yield takeLatest(UPLOAD_USER_IMAGE, uploadUserImageSaga);
 }
 
 /**
  * Saga for updating user info
  */
-export function* updateUserInfo(action: PayloadAction<User>) {
+export function* updateUserInfoSaga(action: PayloadAction<User>) {
     try {
         const user: User = action.payload;
         const updateResponse : User = yield call(saveOrUpdateUser, user);
@@ -104,16 +105,16 @@ export function* updateUserInfo(action: PayloadAction<User>) {
  * Watcher saga for updating user info
  */
 export function* watchUpdateUserInfo() {
-    yield takeLatest(UPDATE_USER_INFO, updateUserInfo);
+    yield takeLatest(UPDATE_USER_INFO, updateUserInfoSaga);
 }
 
 /**
  * Saga for sign in
  */
-function* signIn(action: PayloadAction<LoginFormValues>) {
+export function* signInSaga(action: PayloadAction<LoginFormValues>) {
   try {
     const { email, password } = action.payload;
-    const user: User =  yield call(loginWithEmailAndPassword, email, password);
+    const user: UserCredential =  yield call(loginWithEmailAndPassword, email, password);
     yield put(signInSuccessAction());
   } catch (error: any) {
     yield put(signInFailedAction(error.message));
@@ -125,5 +126,5 @@ function* signIn(action: PayloadAction<LoginFormValues>) {
  * Watcher saga for sign in
  */
 export function* watchSignIn() {
-  yield takeLatest(SIGN_IN, signIn);
+  yield takeLatest(SIGN_IN, signInSaga);
 }

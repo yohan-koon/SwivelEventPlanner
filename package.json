@@ -7,7 +7,7 @@
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest --watchAll"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.19.4",
@@ -47,11 +47,15 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@babel/plugin-transform-class-properties": "^7.23.3",
+    "@babel/plugin-transform-private-methods": "^7.23.3",
+    "@babel/plugin-transform-private-property-in-object": "^7.23.4",
     "@babel/preset-env": "^7.20.0",
     "@babel/runtime": "^7.20.0",
     "@react-native/eslint-config": "^0.72.2",
     "@react-native/metro-config": "^0.72.11",
     "@tsconfig/react-native": "^3.0.0",
+    "@types/jest": "^29.5.8",
     "@types/react": "^18.0.24",
     "@types/react-native-snap-carousel": "^3.8.8",
     "@types/react-test-renderer": "^18.0.0",
@@ -62,6 +66,8 @@
     "metro-react-native-babel-preset": "0.76.8",
     "prettier": "^2.4.1",
     "react-test-renderer": "18.2.0",
+    "redux-saga-test-plan": "^4.0.6",
+    "ts-jest": "^29.1.1",
     "typescript": "4.8.4"
   },
   "engines": {

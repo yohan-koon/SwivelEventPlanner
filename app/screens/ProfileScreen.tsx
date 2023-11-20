@@ -72,7 +72,6 @@ export const ProfileScreen = () => {
       setImageSource(src)
       uploadImage(src)
     } catch (error: any) {
-      console.log({error})
       displayMessage(error)
     }
   }
