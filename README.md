@@ -1,6 +1,7 @@
 # Swivel Event Planner
 
-## Screen recording of the Working application can be accessed [here]('https://drive.google.com/file/d/1sKQZUeLp5zPQOCB0_wxb_0xc2cTJQGpF/view?usp=sharing)
+## Screen recording of the Working application can be accessed through below link
+https://drive.google.com/file/d/1sKQZUeLp5zPQOCB0_wxb_0xc2cTJQGpF/view?usp=sharing
 
 
 ## Steps to Setup the Project
@@ -8,30 +9,22 @@
 1. Clone the project from main branch
 
 <pre>
-```
 git clone git@github.com:yohan-koon/SwivelEventPlanner.git
-```
 </pre>
 
 2. Install dependencies
 <pre>
-```
 yarn
-```
 </pre>
 
 3. Install Pods
 <pre>
-```
 npx pod-install
-```
 </pre>
 
 4. Run the Project
 <pre>
-```
 yarn start
-```
 </pre>
 
 5. Press 'i' for starting ios app
