@@ -26,10 +26,13 @@ export const RootNavigator = () => {
     }, []);
 
     useEffect(() => {
+        if (!firebaseUser && !user) {
+            return setIsAuthenticated(false);
+        }
         if (firebaseUser && user && user.imageUrl && user.firstName && user.lastName) {
             setIsAuthenticated(true);
         }
-    }, [user]);
+    }, [user, firebaseUser]);
 
     return (
         <NavigationContainer>
